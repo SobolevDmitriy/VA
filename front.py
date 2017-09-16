@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'Front.ui'
+# Form implementation generated from reading ui file 'front.ui'
 #
 # Created by: PyQt5 UI code generator 5.9
 #
@@ -11,7 +11,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 class Ui_Form(object):
     def setupUi(self, Form):
         Form.setObjectName("Form")
-        Form.resize(464, 525)
+        Form.resize(492, 489)
         self.gridLayout_3 = QtWidgets.QGridLayout(Form)
         self.gridLayout_3.setObjectName("gridLayout_3")
         self.gridLayout_2 = QtWidgets.QGridLayout()
@@ -49,12 +49,9 @@ class Ui_Form(object):
         self.phi_pw = PlotWidget(Form)
         self.phi_pw.setObjectName("phi_pw")
         self.gridLayout_2.addWidget(self.phi_pw, 2, 0, 1, 1)
-        self.phiDer_pw = PlotWidget(Form)
-        self.phiDer_pw.setObjectName("phiDer_pw")
-        self.gridLayout_2.addWidget(self.phiDer_pw, 3, 0, 1, 1)
-        self.buildGraphs_btn = QtWidgets.QPushButton(Form)
-        self.buildGraphs_btn.setObjectName("buildGraphs_btn")
-        self.gridLayout_2.addWidget(self.buildGraphs_btn, 4, 0, 1, 1)
+        self.ksi_pw = PlotWidget(Form)
+        self.ksi_pw.setObjectName("ksi_pw")
+        self.gridLayout_2.addWidget(self.ksi_pw, 3, 0, 1, 1)
         self.gridLayout_3.addLayout(self.gridLayout_2, 0, 0, 1, 1)
         self.table_tw = QtWidgets.QTableWidget(Form)
         self.table_tw.setObjectName("table_tw")
@@ -73,6 +70,5 @@ class Ui_Form(object):
         self.h_lbl.setText(_translate("Form", "<html><head/><body><p align=\"right\"><span style=\" font-size:14pt; font-style:italic;\">h =</span></p></body></html>"))
         self.n_lbl.setText(_translate("Form", "<html><head/><body><p align=\"right\"><span style=\" font-size:14pt; font-style:italic;\">N =</span></p></body></html>"))
         self.calc_btn.setText(_translate("Form", "Calculate"))
-        self.buildGraphs_btn.setText(_translate("Form", "Build graphs"))
 
 from pyqtgraph import PlotWidget

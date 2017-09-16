@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>464</width>
-    <height>525</height>
+    <width>492</width>
+    <height>489</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -71,14 +71,7 @@
       <widget class="PlotWidget" name="phi_pw"/>
      </item>
      <item row="3" column="0">
-      <widget class="PlotWidget" name="phiDer_pw"/>
-     </item>
-     <item row="4" column="0">
-      <widget class="QPushButton" name="buildGraphs_btn">
-       <property name="text">
-        <string>Build graphs</string>
-       </property>
-      </widget>
+      <widget class="PlotWidget" name="ksi_pw"/>
      </item>
     </layout>
    </item>
