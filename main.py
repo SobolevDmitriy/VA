@@ -1,7 +1,8 @@
 import sys
 import math
 import numpy as np
-from PyQt5.QtWidgets import QApplication, QWidget, QTableWidgetItem
+from PyQt5.QtWidgets import (QApplication, QWidget,
+                             QTableWidgetItem, QMessageBox)
 from front import Ui_Form
 
 
@@ -16,16 +17,6 @@ class MainWindow(Ui_Form):
         self.setupUi(form)
         self.calc_btn.clicked.connect(self.calcslot)
 
-    def readdata(self):
-        try:
-            self.j = float(self.j_le.text())
-            self.a = float(self.a_le.text())
-            self.h = float(self.h_le.text())
-            self.n = int(self.n_le.text())
-        except ValueError:
-            print('Only numbers required')
-
-
     def heune(self):
         self.phi = np.zeros(self.n, dtype='float64')
         self.ksi = np.zeros(self.n, dtype='float64')
@@ -39,6 +30,9 @@ class MainWindow(Ui_Form):
 
             self.ksi[i+1] = self.ksi[i] + self.h*self.f(phi_expr, ksi_expr)
             self.phi[i+1] = self.phi[i] + self.h*ksi_expr
+
+    def va(self):
+        pass
 
     def f(self, phi, ksi):
         return -self.a * ksi - math.sin(phi) + self.j
@@ -72,7 +66,22 @@ class MainWindow(Ui_Form):
             self.table_tw.setItem(row, 2, QTableWidgetItem(str(self.ksi[row])))
 
     def calcslot(self):
-        self.readdata()
+        # reading data from lines
+        while True:
+            try:
+                self.j = float(self.j_le.text())
+                self.a = float(self.a_le.text())
+                self.h = float(self.h_le.text())
+                self.n = int(self.n_le.text())
+                break
+            except ValueError:
+                err_msg = QMessageBox()
+                err_msg.setWindowTitle('Error message')
+                err_msg.setText('Only numbers required')
+                err_msg.setStandardButtons(QMessageBox.Ok)
+                err_msg.exec_()
+                return
+
         self.drawplots()
         self.drawtable()
 
