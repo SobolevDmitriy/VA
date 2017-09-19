@@ -17,59 +17,54 @@ class MainWindow(Ui_Form):
         self.setupUi(form)
         self.calc_btn.clicked.connect(self.calcslot)
 
-    def heune(self):
+    def heune(self, j):
         self.phi = np.zeros(self.n, dtype='float64')
         self.ksi = np.zeros(self.n, dtype='float64')
         for i in range(self.n-1):
-
             phi_star = self.phi[i] + self.h*self.ksi[i]
-            ksi_star = self.ksi[i] + self.h*self.f(self.phi[i], self.ksi[i])
-
+            ksi_star = self.ksi[i] + self.h*self.f(self.phi[i], self.ksi[i], j)
             phi_expr = (phi_star + self.phi[i])/2
             ksi_expr = (ksi_star + self.ksi[i])/2
-
-            self.ksi[i+1] = self.ksi[i] + self.h*self.f(phi_expr, ksi_expr)
+            self.ksi[i+1] = self.ksi[i] + self.h*self.f(phi_expr, ksi_expr, j)
             self.phi[i+1] = self.phi[i] + self.h*ksi_expr
+        avarage_ksi = ((self.phi[self.n-1] - self.phi[self.n//2])/
+                       (self.time[self.n-1] - self.time[self.n//2]))
+        return avarage_ksi
 
     def va(self):
-        pass
+        self.START = 0
+        self.END = 3
+        self.STEP = 0.01
+        self.avarage_ksi = np.zeros(int((self.END-self.START)/self.STEP))
+        self.j = np.arange(self.START, self.END,self.STEP)
+        for i, j in enumerate(self.j):
+            self.avarage_ksi[i] = self.heune(j)
 
-    def f(self, phi, ksi):
-        return -self.a * ksi - math.sin(phi) + self.j
+    def f(self, phi, ksi, j):
+        return -self.a * ksi - math.sin(phi) + j
 
     def drawplots(self):
-        self.heune()
-        self.time = np.arange(0, self.n*self.h, self.h)
+        self.va()
 
-        self.phi_pw.getPlotItem().clear()
-        self.phi_pw.getPlotItem().setTitle("Phi graph")
-        self.phi_pw.getPlotItem().plot(self.time, self.phi)
-        self.phi_pw.getPlotItem().showGrid(x=True, y=True)
-        self.phi_pw.getPlotItem().setLabel('left', 'Phi', units='t')
-        self.phi_pw.getPlotItem().setLabel('bottom', 't')
-
-        self.ksi_pw.getPlotItem().clear()
-        self.ksi_pw.getPlotItem().setTitle("Phi' graph")
-        self.ksi_pw.getPlotItem().plot(self.time, self.ksi)
-        self.ksi_pw.getPlotItem().showGrid(x=True, y=True)
-        self.ksi_pw.getPlotItem().setLabel('left', "Phi'", units='t')
-        self.ksi_pw.getPlotItem().setLabel('bottom', 't')
-        a = self.phi_pw.plotItem
+        self.va_pw.getPlotItem().clear()
+        self.va_pw.getPlotItem().setTitle("Volt-ampere characteristics graph")
+        self.va_pw.getPlotItem().plot(self.j, self.avarage_ksi)
+        self.va_pw.getPlotItem().showGrid(x=True, y=True)
+        self.va_pw.getPlotItem().setLabel('left', "V'", units='j')
+        self.va_pw.getPlotItem().setLabel('bottom', 'j')
 
     def drawtable(self):
-        self.table_tw.setRowCount(self.n)
-        self.table_tw.setColumnCount(3)
-        self.table_tw.setHorizontalHeaderLabels(('t', 'phi(t)', "phi'(t)"))
-        for row in range(self.n):
-            self.table_tw.setItem(row, 0, QTableWidgetItem(str(self.time[row])))
-            self.table_tw.setItem(row, 1, QTableWidgetItem(str(self.phi[row])))
-            self.table_tw.setItem(row, 2, QTableWidgetItem(str(self.ksi[row])))
+        self.table_tw.setRowCount(self.j.size)
+        self.table_tw.setColumnCount(2)
+        self.table_tw.setHorizontalHeaderLabels(('j', 'V(j)'))
+        for row in range(self.j.size):
+            self.table_tw.setItem(row, 0, QTableWidgetItem(str(self.j[row])))
+            self.table_tw.setItem(row, 1, QTableWidgetItem(str(self.avarage_ksi[row])))
 
     def calcslot(self):
         # reading data from lines
         while True:
             try:
-                self.j = float(self.j_le.text())
                 self.a = float(self.a_le.text())
                 self.h = float(self.h_le.text())
                 self.n = int(self.n_le.text())
@@ -81,6 +76,7 @@ class MainWindow(Ui_Form):
                 err_msg.setStandardButtons(QMessageBox.Ok)
                 err_msg.exec_()
                 return
+        self.time = np.arange(0, self.n * self.h, self.h)
 
         self.drawplots()
         self.drawtable()
